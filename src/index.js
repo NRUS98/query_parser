@@ -1,6 +1,7 @@
 import { query } from "./query.js";
 import { getData } from "./utils/faker";
 import { parseQuery } from "./utils/parsers/parseQuery";
+import { checkGroup } from "./utils/checks/checkGroup";
 
 const persons = getData();
 
@@ -10,9 +11,8 @@ const filtredPersons = persons.filter((person) => new Function("person", createF
 
 console.log("First method ", filtredPersons);
 
-const createFilterFunc_2 = (query) => {
-  return (person) => eval(query.children.some((child) => child.type === "rule") && parseQuery(query));
-};
+
+const createFilterFunc_2 = (query) => (person) => checkGroup(person, query.logicalOperator, query.children);
 
 const filtredPersons_2 = persons.filter((person) => createFilterFunc_2(query)(person));
 
